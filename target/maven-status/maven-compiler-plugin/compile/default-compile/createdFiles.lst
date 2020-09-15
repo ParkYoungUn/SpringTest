@@ -1,0 +1,5 @@
+com\yi\controller\HomeController.class
+com\yi\domain\BoardVO.class
+com\yi\domain\Criteria.class
+com\yi\service\BoardService.class
+com\yi\controller\BoardController.class
