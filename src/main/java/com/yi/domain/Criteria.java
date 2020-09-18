@@ -2,51 +2,34 @@ package com.yi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
-
-@ToString
-@Setter
 @Getter
+@Setter
 public class Criteria {
 
-    private int page;
-    private int perPageNum;
+	/** 현재 페이지 번호 */
+	private int currentPageNo;
 
-    public Criteria() {
-        this.page = 1;
-        this.perPageNum = 10;
-    }
+	/** 페이지당 출력할 데이터 개수 */
+	private int recordsPerPage;
 
-    public void setPage(int page) {
+	/** 화면 하단에 출력할 페이지 사이즈 */
+	private int pageSize;
 
-        if (page <= 0) {
-            this.page = 1;
-            return;
-        }
+	/** 검색 키워드 */
+	private String keyword;
 
-        this.page = page;
-    }
+	/** 검색 유형 */
+	private String type;
 
-    public int getPage() {
-        return page;
-    }
+	public Criteria() {
+		this.currentPageNo = 1;
+		this.recordsPerPage = 10;
+		this.pageSize = 10;
+	}
 
-    public void setPerPageNum(int perPageNum) {
+	public int getStartPage() {
+		return (currentPageNo - 1) * recordsPerPage;  // 0*10 == 0
+	}
 
-        if (perPageNum <= 0 || perPageNum > 100) {
-            this.perPageNum = 10;
-            return;
-        }
-
-        this.perPageNum = perPageNum;
-    }
-
-    public int getPerPageNum() {
-        return this.perPageNum;
-    }
-
-    public int getPageStart() {
-        return (this.page - 1) * perPageNum;
-    }
 }

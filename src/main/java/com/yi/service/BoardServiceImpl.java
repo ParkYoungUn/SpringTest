@@ -1,5 +1,6 @@
 package com.yi.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +31,11 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public BoardVO get(String name) {
+	public BoardVO get(String mid) {
 
-		log.info("get......" + name);
+		log.info("get......" + mid);
 
-		return mapper.read(name);
+		return mapper.read(mid);
 
 	}
 
@@ -56,9 +57,9 @@ public class BoardServiceImpl implements BoardService {
 
 	 @Override
 	 public List<BoardVO> getList() {
-	
+
 	 log.info("getList..........");
-	
+
 	 return mapper.getList();
 	 }
 
@@ -66,6 +67,14 @@ public class BoardServiceImpl implements BoardService {
 	public List<BoardVO> getList(Criteria cri) {
 
 		log.info("get List with criteria: " + cri);
+
+		List<BoardVO> boardList = Collections.emptyList();
+
+		int boardTotalCount = mapper.getTotalCount(cri);
+
+		if (boardTotalCount > 0) {
+			boardList = mapper.getListWithPaging(cri);
+		}
 
 		return mapper.getListWithPaging(cri);
 	}

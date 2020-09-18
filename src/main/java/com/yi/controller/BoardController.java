@@ -1,5 +1,7 @@
 package com.yi.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,18 +49,16 @@ public class BoardController {
 	// }
 
 	@GetMapping("/list")
-	public void list(Criteria cri, Model model) {
+	public void list(@ModelAttribute("criteria") Criteria cri, Model model) {
 
 		log.info("list: " + cri);
+		List<BoardVO> boardList = service.getList(cri);
+
 		model.addAttribute("list", service.getList(cri));
-		// model.addAttribute("pageMaker", new PageDTO(cri, 123));
-
 		int total = service.getTotal(cri);
-
 		log.info("total: " + total);
 
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
-
 	}
 
 	@PostMapping("/register")
@@ -81,10 +81,10 @@ public class BoardController {
 	// }
 
 	@GetMapping({ "/get", "/modify" })
-	public void get(@RequestParam("name") String name, @ModelAttribute("cri") Criteria cri, Model model) {
+	public void get(@RequestParam("mid") String mid, @ModelAttribute("cri") Criteria cri, Model model) {
 
 		log.info("/get or modify");
-		model.addAttribute("board", service.get(name));
+		model.addAttribute("board", service.get(mid));
 	}
 
 	// @PostMapping("/modify")
@@ -105,10 +105,8 @@ public class BoardController {
 			rttr.addFlashAttribute("result", "success");
 		}
 
-		rttr.addAttribute("pageNum", cri.getPage());
-		rttr.addAttribute("amount", cri.getPerPageNum());
-		rttr.addAttribute("type", cri.getPage());
-		rttr.addAttribute("keyword", cri.getPage());
+		rttr.addAttribute("startPage", cri.getStartPage());
+		rttr.addAttribute("recordsPerPage", cri.getRecordsPerPage());
 
 		return "redirect:/board/list";
 	}
@@ -131,10 +129,8 @@ public class BoardController {
 		if (service.remove(mid)) {
 			rttr.addFlashAttribute("result", "success");
 		}
-		rttr.addAttribute("pageNum", cri.getPage());
-		rttr.addAttribute("amount", cri.getPerPageNum());
-		rttr.addAttribute("type", cri.getPage());
-		rttr.addAttribute("keyword", cri.getPage());
+		rttr.addAttribute("startPage", cri.getStartPage());
+		rttr.addAttribute("recordsPerPage", cri.getRecordsPerPage());
 
 		return "redirect:/board/list";
 	}

@@ -1,0 +1,8 @@
+com\yi\hellotest\BeanSpringTest.class
+com\yi\persistence\TimeMapperTests.class
+com\yi\sample\SamileTests.class
+com\yi\mybatis\MySQLConnectionTest.class
+com\yi\service\BoardServiceTests.class
+com\yi\controller\BoardControllerTests.class
+com\yi\mybatis\MyBatisTest.class
+com\yi\persistence\BoardMapperTests.class
