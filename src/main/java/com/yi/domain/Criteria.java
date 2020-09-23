@@ -24,12 +24,24 @@ public class Criteria {
 
 	public Criteria() {
 		this.currentPageNo = 1;
-		this.recordsPerPage = 10;
+		this.recordsPerPage = 3;
 		this.pageSize = 10;
 	}
 
+	public Criteria(int page, int pageper) {
+		this.currentPageNo = page;
+		this.recordsPerPage = pageper;
+		this.pageSize = 10;
+	}
+
+
+
 	public int getStartPage() {
-		return (currentPageNo - 1) * recordsPerPage;  // 0*10 == 0
+		return (currentPageNo - 1) * recordsPerPage;
+	}
+
+	public String[] gettypeArr() {
+		return type==null? new String[] {}:type.split("");
 	}
 
 }

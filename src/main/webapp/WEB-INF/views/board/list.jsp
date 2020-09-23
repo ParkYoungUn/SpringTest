@@ -38,7 +38,7 @@
 					<c:forEach items="${list}" var="board">
 						<tr>
 							<td><c:out value="${board.mid}" /></td>
-							<%-- <td><a href='/board/get?mid=<c:out value="${board.mid}"/>'><c:out value="${board.title}"/></a></td> --%>
+							<%-- <td><a href='/board/get?mid=<c:out value="${board.mid}"/>'><c:out value="${board.name}"/></a></td> --%>
 
 							<td><a class='move' href='<c:out value="${board.mid}"/>'>
 									<c:out value="${board.name}" />
@@ -53,24 +53,23 @@
 
 				<div class='row'>
 					<div class="col-lg-12">
-
 						<form id='searchForm' action="/board/list" method='get'>
 							<select name='type'>
 								<option value=""
 									<c:out value="${pageMaker.cri.type == null?'selected':''}"/>>--</option>
-								<option value="T"
-									<c:out value="${pageMaker.cri.type eq 'T'?'selected':''}"/>>번호</option>
+								<option value="A"
+									<c:out value="${pageMaker.cri.type eq 'mid'?'selected':''}"/>>번호</option>
+								<option value="B"
+									<c:out value="${pageMaker.cri.type eq 'name'?'selected':''}"/>>이름</option>
 								<option value="C"
-									<c:out value="${pageMaker.cri.type eq 'C'?'selected':''}"/>>이름</option>
-								<option value="W"
-									<c:out value="${pageMaker.cri.type eq 'W'?'selected':''}"/>>나이</option>
-								<option value="TC"
-									<c:out value="${pageMaker.cri.type eq 'TC'?'selected':''}"/>>주소
-									or 내용</option>
-								<option value="TW"
-									<c:out value="${pageMaker.cri.type eq 'TW'?'selected':''}"/>>전화번호
+									<c:out value="${pageMaker.cri.type eq 'age'?'selected':''}"/>>나이</option>
+								<option value="AB"
+									<c:out value="${pageMaker.cri.type eq 'TC'?'selected':''}"/>>번호
 									or 이름</option>
-								<option value="TWC"
+								<option value="AC"
+									<c:out value="${pageMaker.cri.type eq 'TW'?'selected':''}"/>>번호
+									or 나이</option>
+								<option value="ABC"
 									<c:out value="${pageMaker.cri.type eq 'TWC'?'selected':''}"/>>번호
 									or 이름 or 나이</option>
 							</select> <input type='text' name='keyword'
@@ -88,22 +87,36 @@
 				<div class='pull-right'>
 					<ul class="pagination">
 
+						<%--             <c:if test="${pageMaker.prev}">
+              <li class="paginate_button previous"><a href="#">Previous</a>
+              </li>
+            </c:if>
+
+            <c:forEach var="num" begin="${pageMaker.startPage}"
+              end="${pageMaker.endPage}">
+              <li class="paginate_button"><a href="#">${num}</a></li>
+            </c:forEach>
+
+            <c:if test="${pageMaker.next}">
+              <li class="paginate_button next"><a href="#">Next</a></li>
+            </c:if> --%>
+
 						<c:if test="${pageMaker.prev}">
-							<li class="paginate_button previous">
-								<a href="${pageMaker.startPage -1}">Previous</a>
-							</li>
+							<li class="paginate_button previous"><a
+								href="${pageMaker.startPage -1}">Previous</a></li>
 						</c:if>
 
 						<c:forEach var="num" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
-							<li class="paginate_button  ${pageMaker.cri.currentPageNo == num ? "active":""} ">
+							<li class="paginate_button  ${pageMaker.cri.currentPageNo == num ? 'active':''} ">
 								<a href="${num}">${num}</a>
 							</li>
 						</c:forEach>
+
 						<c:if test="${pageMaker.next}">
-							<li class="paginate_button next">
-								<a href="${pageMaker.endPage +1 }">Next</a>
-							</li>
+							<li class="paginate_button next"><a
+								href="${pageMaker.endPage +1}">Next</a></li>
 						</c:if>
+
 
 					</ul>
 				</div>
@@ -111,15 +124,13 @@
 			</div>
 
 			<form id='actionForm' action="/board/list" method='get'>
-				<input type='hidden' name='currentPageNo'
-					value='${pageMaker.cri.currentPageNo}'> <input
-					type='hidden' name='recordsPerPage'
-					value='${pageMaker.cri.recordsPerPage}'> <input
-					type='hidden' name='type'
+				<input type='hidden' name='currentPageNo' value='${pageMaker.cri.currentPageNo}'>
+				<input type='hidden' name='recordsPerPage' value='${pageMaker.cri.recordsPerPage}'>
+
+				<input type='hidden' name='type'
 					value='<c:out value="${ pageMaker.cri.type }"/>'> <input
 					type='hidden' name='keyword'
 					value='<c:out value="${ pageMaker.cri.keyword }"/>'>
-
 			</form>
 
 
@@ -190,37 +201,25 @@
 
 						var actionForm = $("#actionForm");
 
-						 $(".paginate_button a").on(
-								"click",
-								function(e) {
-
+						$(".paginate_button a").on("click",function(e) {
 									e.preventDefault();
-
 									console.log('click');
+									actionForm.find("input[name='currentPageNo']").val($(this).attr("href"));
+									actionForm.submit();
+								});
 
-									actionForm.find(
-											"input[name='currentPageNo']").val(
-											$(this).attr("href"));
+						$(".move").on("click",
+								function(e) {
+									e.preventDefault();
+									actionForm
+											.append("<input type='hidden' name='mid' value='"
+													+ $(this).attr("href")
+													+ "'>");
+									actionForm.attr("action",
+											"/board/get");
 									actionForm.submit();
 								}); 
-
-					 	$(".move")
-								.on(
-										"click",
-										function(e) {
-
-											e.preventDefault();
-											actionForm
-													.append("<input type='hidden' name='mid' value='"
-															+ $(this).attr(
-																	"href")
-															+ "'>");
-											actionForm.attr("action",
-													"/board/get");
-											actionForm.submit();
-
-										}); 
-
+						
 						var searchForm = $("#searchForm");
 
 						$("#searchForm button").on(
@@ -239,9 +238,8 @@
 										return false;
 									}
 
-									searchForm.find(
-											"input[name='currentPageNo']").val(
-											"1");
+									searchForm.find("input[name='currentPageNo']")
+											.val("1");
 									e.preventDefault();
 
 									searchForm.submit();
